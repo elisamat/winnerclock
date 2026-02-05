@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Timekeeper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Font for text -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Digital font from Google Fonts alternative -->
+  <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f1ec;
+      --surface: #ffffff;
+      --text: #2b2b2b;
+      --muted: #777;
+      --accent: #a3473b;
+      --border: #e0ddd8;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    h1 {
+      font-family: 'Digital-7', monospace;
+      font-size: 2rem;
+      text-align: center;
+      margin: 0 0 0.25rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 1.25rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem 0.7rem;
+      font-size: 1rem;
+      margin-top: 0.3rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fafafa;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 2rem;
+      padding: 0.9rem;
+      font-size: 1rem;
+      border-radius: 14px;
+      border: none;
+      background: var(--text);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button:disabled {
+      background: #aaa;
+      cursor: default;
+    }
+
+    button:active { transform: scale(0.98); }
+
+    .status {
+      text-align: center;
+      font-size: 1.2rem;
+      padding: 3rem 1rem;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hidden { display: none; }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 0;
+    }
+
+    li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .alarm {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- SETUP -->
+  <div id="setup">
+    <h1>TIMEKEEPER</h1>
+
+    <label>Players</label>
+    <input type="number" id="players" value="3" min="1">
+
+    <label>Rounds</label>
+    <input type="number" id="rounds" value="10" min="1">
+
+    <label>Minimum duration (minutes)</label>
+    <input type="number" id="minTime" value="0" min="0">
+
+    <label>Maximum duration (minutes)</label>
+    <input type="number" id="maxTime" value="15" min="1">
+
+    <button onclick="startGame()">Begin</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="hidden">
+    <div class="status" id="status"></div>
+    <button id="roundBtn" onclick="startRound()">Start round</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="hidden">
+    <h1>Revealed Time</h1>
+    <div class="subtitle">Objective durations</div>
+    <ul id="resultsList"></ul>
+  </div>
+
+</div>
+
+<audio id="alarm">
+  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
+</audio>
+
+<script>
+  let currentRound = 0;
+  let totalRounds = 0;
+  let minSeconds = 0;
+  let maxSeconds = 0;
+  let durations = [];
+  let timer = null;
+
+  function startGame() {
+    totalRounds = Number(document.getElementById("rounds").value);
+    minSeconds = Number(document.getElementById("minTime").value) * 60;
+    maxSeconds = Number(document.getElementById("maxTime").value) * 60;
+
+    document.getElementById("setup").classList.add("hidden");
+    document.getElementById("game").classList.remove("hidden");
+
+    updateStatus("Ready for the first round");
+  }
+
+  function startRound() {
+    if (currentRound >= totalRounds) return;
+
+    const duration = random(minSeconds, maxSeconds);
+    durations.push(duration);
+
+    updateStatus("Round in progress");
+    document.getElementById("roundBtn").disabled = true;
+
+    timer = setTimeout(endRound, duration * 1000);
+  }
+
+  function endRound() {
+    clearTimeout(timer);
+    document.getElementById("alarm").play();
+    currentRound++;
+
+    document.getElementById("roundBtn").disabled = false;
+
+    if (currentRound < totalRounds) {
+      updateStatus(`Round ${currentRound} complete`);
+    } else {
+      updateStatus("All rounds complete");
+      document.getElementById("roundBtn").innerText = "Reveal time";
+      document.getElementById("roundBtn").onclick = showResults;
+    }
+  }
+
+  function showResults() {
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+
+    const list = document.getElementById("resultsList");
+    list.innerHTML = "";
+
+    durations.forEach((d, i) => {
+      const li = document.createElement("li");
+      li.textContent = `Round ${i + 1}: ${format(d)}`;
+      list.appendChild(li);
+    });
+  }
+
+  function updateStatus(text) {
+    document.getElementById("status").textContent = text;
+  }
+
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function format(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m} min ${s} s`;
+  }
+</script>
+</body>
+</html>
