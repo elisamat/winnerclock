@@ -5,10 +5,7 @@
   <title>Timekeeper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Font for text -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Digital font from Google Fonts alternative -->
   <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
 
   <style>
@@ -76,12 +73,11 @@
       border-radius: 10px;
       border: 1px solid var(--border);
       background: #fafafa;
-      font-family: 'Inter', sans-serif;
     }
 
     button {
       width: 100%;
-      margin-top: 2rem;
+      margin-top: 1rem;
       padding: 0.9rem;
       font-size: 1rem;
       border-radius: 14px;
@@ -89,8 +85,10 @@
       background: var(--text);
       color: white;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.1s ease;
-      font-family: 'Inter', sans-serif;
+    }
+
+    button.secondary {
+      background: #666;
     }
 
     button:disabled {
@@ -98,19 +96,10 @@
       cursor: default;
     }
 
-    button:active { transform: scale(0.98); }
-
     .status {
       text-align: center;
       font-size: 1.2rem;
       padding: 3rem 1rem;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 0.95rem;
     }
 
     .hidden { display: none; }
@@ -125,12 +114,6 @@
       padding: 0.75rem 0;
       border-bottom: 1px solid var(--border);
       font-size: 0.95rem;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .alarm {
-      color: var(--accent);
-      font-weight: 600;
     }
   </style>
 </head>
@@ -154,6 +137,7 @@
     <label>Maximum duration (minutes)</label>
     <input type="number" id="maxTime" value="15" min="1">
 
+    <button class="secondary" onclick="testSound()">🔊 Test sound</button>
     <button onclick="startGame()">Begin</button>
   </div>
 
@@ -172,7 +156,7 @@
 
 </div>
 
-<audio id="alarm">
+<audio id="alarm" preload="auto">
   <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
 </audio>
 
@@ -183,8 +167,31 @@
   let maxSeconds = 0;
   let durations = [];
   let timer = null;
+  let audioUnlocked = false;
+
+  const alarm = document.getElementById("alarm");
+
+  function unlockAudio() {
+    if (audioUnlocked) return;
+
+    alarm.volume = 0;
+    alarm.play().then(() => {
+      alarm.pause();
+      alarm.currentTime = 0;
+      alarm.volume = 1;
+      audioUnlocked = true;
+    }).catch(() => {});
+  }
+
+  function testSound() {
+    unlockAudio();
+    alarm.currentTime = 0;
+    alarm.play().catch(() => {});
+  }
 
   function startGame() {
+    unlockAudio();
+
     totalRounds = Number(document.getElementById("rounds").value);
     minSeconds = Number(document.getElementById("minTime").value) * 60;
     maxSeconds = Number(document.getElementById("maxTime").value) * 60;
@@ -196,6 +203,8 @@
   }
 
   function startRound() {
+    unlockAudio();
+
     if (currentRound >= totalRounds) return;
 
     const duration = random(minSeconds, maxSeconds);
@@ -209,17 +218,20 @@
 
   function endRound() {
     clearTimeout(timer);
-    document.getElementById("alarm").play();
-    currentRound++;
 
+    alarm.currentTime = 0;
+    alarm.play().catch(() => {});
+
+    currentRound++;
     document.getElementById("roundBtn").disabled = false;
 
     if (currentRound < totalRounds) {
       updateStatus(`Round ${currentRound} complete`);
     } else {
       updateStatus("All rounds complete");
-      document.getElementById("roundBtn").innerText = "Reveal time";
-      document.getElementById("roundBtn").onclick = showResults;
+      const btn = document.getElementById("roundBtn");
+      btn.innerText = "Reveal time";
+      btn.onclick = showResults;
     }
   }
 
