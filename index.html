@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Timekeeper</title>
+<title>TIMEKEEPER</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/digital-7-mono" rel="stylesheet">
 
-
 <style>
 :root {
-  --bg: #F3F0E9;
+  --bg: #f4f1ec;
   --surface: #ffffff;
   --text: #2b2b2b;
   --muted: #777;
@@ -47,8 +47,9 @@ body {
 h1 {
   font-family: 'Digital-7 Mono', monospace;
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin: 0 0 0.25rem;
+  letter-spacing: 4px;
 }
 
 .subtitle {
@@ -66,7 +67,6 @@ label {
 }
 
 input {
-  font-family: 'Barlow Condensed', sans-serif;  
   width:100%;
   padding:0.6rem 0.7rem;
   font-size:1rem;
@@ -77,7 +77,6 @@ input {
 }
 
 button {
-  font-family: 'Barlow Condensed', sans-serif;
   width:100%;
   margin-top:1rem;
   padding:0.9rem;
@@ -87,6 +86,9 @@ button {
   background:var(--text);
   color:white;
   cursor:pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 button:disabled {
@@ -121,16 +123,16 @@ li {
 
   <!-- SETUP -->
   <div id="setup">
-    <h1>Timekeeper</h1>
+    <h1>TIMEKEEPER</h1>
 
     <label>Rounds</label>
     <input type="number" id="rounds" value="5" min="1">
 
-    <label>Minimum duration (in minutes)</label>
-    <input type="number" id="minTime" value="1" min="1">
+    <label>Minimum duration (minutes)</label>
+    <input type="number" id="minTime" value="0" min="0">
 
-    <label>Maximum duration (in minutes)</label>
-    <input type="number" id="maxTime" value="10" min="2">
+    <label>Maximum duration (minutes)</label>
+    <input type="number" id="maxTime" value="5" min="1">
 
     <button onclick="startGame()">Begin</button>
   </div>
@@ -152,45 +154,57 @@ li {
 </div>
 
 <script>
+// --- GAME STATE ---
 let currentRound = 0;
 let totalRounds = 0;
 let minSeconds = 0;
 let maxSeconds = 0;
 let durations = [];
 let timer = null;
-let audioUnlocked = false;
 
-// --- Unlock Audio (important for mobile browsers)
-function unlockAudio() {
-  if(audioUnlocked) return;
-
-  const dummy = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-  dummy.volume = 0;
-  dummy.play().then(()=>dummy.pause()).catch(()=>{});
-
-  audioUnlocked = true;
+// --- AUDIO CONTEXT ---
+let audioContext = null;
+function initAudio() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
 }
 
-// --- Play Sounds (new Audio object every time)
+// --- PLAY SOUNDS ---
 function playStartSound() {
-  const sound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-  sound.play().catch(()=>{});
+  if (!audioContext) return;
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  osc.type = "square";
+  osc.frequency.value = 880; // higher pitch beep
+  gain.gain.value = 0.1;
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+  osc.start();
+  osc.stop(audioContext.currentTime + 0.15);
 }
 
 function playEndSound() {
-  const sound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
-  sound.play().catch(()=>{});
+  if (!audioContext) return;
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  osc.type = "square";
+  osc.frequency.value = 440; // lower pitch beep
+  gain.gain.value = 0.15;
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+  osc.start();
+  osc.stop(audioContext.currentTime + 0.5);
 }
 
-// --- Start Game
+// --- START GAME ---
 function startGame() {
-  unlockAudio();
+  initAudio(); // important: must be triggered by user click
 
   totalRounds = Number(document.getElementById("rounds").value);
   minSeconds = Number(document.getElementById("minTime").value) * 60;
   maxSeconds = Number(document.getElementById("maxTime").value) * 60;
 
-  // Safety check
   if(maxSeconds < minSeconds){
     [minSeconds, maxSeconds] = [maxSeconds, minSeconds];
   }
@@ -206,11 +220,9 @@ function startGame() {
   document.getElementById("roundBtn").onclick = startRound;
 }
 
-// --- Start Round
+// --- START ROUND ---
 function startRound() {
   if(currentRound >= totalRounds) return;
-
-  unlockAudio();
 
   const duration = random(minSeconds, maxSeconds);
   durations.push(duration);
@@ -223,7 +235,7 @@ function startRound() {
   timer = setTimeout(endRound, duration * 1000);
 }
 
-// --- End Round
+// --- END ROUND ---
 function endRound() {
   clearTimeout(timer);
 
@@ -242,7 +254,7 @@ function endRound() {
   }
 }
 
-// --- Show Results
+// --- SHOW RESULTS ---
 function showResults() {
   document.getElementById("game").classList.add("hidden");
   document.getElementById("results").classList.remove("hidden");
@@ -257,7 +269,7 @@ function showResults() {
   });
 }
 
-// --- Utilities
+// --- UTILITIES ---
 function updateStatus(text){
   document.getElementById("status").textContent = text;
 }
@@ -268,10 +280,9 @@ function random(min,max){
 
 function format(seconds){
   const m = Math.floor(seconds/60);
-  const s = seconds%60;
+  const s = seconds % 60;
   return `${m} min ${s} s`;
 }
 </script>
-
 </body>
 </html>
