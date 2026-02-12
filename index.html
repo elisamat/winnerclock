@@ -1,121 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Timekeeper</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Timekeeper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/digital-7-mono" rel="stylesheet">
 
-  <style>
-    :root {
-      --bg: #f4f1ec;
-      --surface: #ffffff;
-      --text: #2b2b2b;
-      --muted: #777;
-      --accent: #a3473b;
-      --border: #e0ddd8;
-      --radius: 18px;
-    }
 
-    * { box-sizing: border-box; }
+<style>
+:root {
+  --bg: #F3F0E9;
+  --surface: #ffffff;
+  --text: #2b2b2b;
+  --muted: #777;
+  --border: #e0ddd8;
+  --radius: 18px;
+}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 1.5rem;
-    }
+* { box-sizing: border-box; }
 
-    .app {
-      width: 100%;
-      max-width: 420px;
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow:
-        0 10px 30px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.6);
-    }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow Condensed', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
 
-    h1 {
-      font-family: 'Digital-7', monospace;
-      font-size: 2rem;
-      text-align: center;
-      margin: 0 0 0.25rem;
-    }
+.app {
+  width: 100%;
+  max-width: 500px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
 
-    .subtitle {
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
-    }
+h1 {
+  font-family: 'Digital-7 Mono', monospace;
+  text-align: center;
+  font-size: 2rem;
+  margin: 0 0 0.25rem;
+}
 
-    label {
-      font-size: 0.85rem;
-      color: var(--muted);
-      display: block;
-      margin-top: 1.25rem;
-    }
+.subtitle {
+  text-align:center;
+  font-size:0.9rem;
+  color:var(--muted);
+  margin-bottom:1rem;
+}
 
-    input {
-      width: 100%;
-      padding: 0.6rem 0.7rem;
-      font-size: 1rem;
-      margin-top: 0.3rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #fafafa;
-    }
+label {
+  font-size:0.85rem;
+  color:var(--muted);
+  display:block;
+  margin-top:1.25rem;
+}
 
-    button {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 0.9rem;
-      font-size: 1rem;
-      border-radius: 14px;
-      border: none;
-      background: var(--text);
-      color: white;
-      cursor: pointer;
-    }
+input {
+  font-family: 'Barlow Condensed', sans-serif;  
+  width:100%;
+  padding:0.6rem 0.7rem;
+  font-size:1rem;
+  margin-top:0.3rem;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fafafa;
+}
 
-    button.secondary {
-      background: #666;
-    }
+button {
+  font-family: 'Barlow Condensed', sans-serif;
+  width:100%;
+  margin-top:1rem;
+  padding:0.9rem;
+  font-size:1rem;
+  border-radius:14px;
+  border:none;
+  background:var(--text);
+  color:white;
+  cursor:pointer;
+}
 
-    button:disabled {
-      background: #aaa;
-      cursor: default;
-    }
+button:disabled {
+  background:#aaa;
+  cursor:default;
+}
 
-    .status {
-      text-align: center;
-      font-size: 1.2rem;
-      padding: 3rem 1rem;
-    }
+.status {
+  text-align:center;
+  font-size:1.2rem;
+  padding:2rem 1rem;
+}
 
-    .hidden { display: none; }
+.hidden { display:none; }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0 0;
-    }
+ul {
+  list-style:none;
+  padding:0;
+  margin:1rem 0 0;
+}
 
-    li {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.95rem;
-    }
-  </style>
+li {
+  padding:0.5rem 0;
+  border-bottom:1px solid var(--border);
+  font-size:0.95rem;
+}
+</style>
 </head>
 
 <body>
@@ -123,21 +121,17 @@
 
   <!-- SETUP -->
   <div id="setup">
-    <h1>TIMEKEEPER</h1>
-
-    <label>Players</label>
-    <input type="number" id="players" value="3" min="1">
+    <h1>Timekeeper</h1>
 
     <label>Rounds</label>
-    <input type="number" id="rounds" value="10" min="1">
+    <input type="number" id="rounds" value="5" min="1">
 
-    <label>Minimum duration (minutes)</label>
-    <input type="number" id="minTime" value="0" min="0">
+    <label>Minimum duration (in minutes)</label>
+    <input type="number" id="minTime" value="1" min="1">
 
-    <label>Maximum duration (minutes)</label>
-    <input type="number" id="maxTime" value="15" min="1">
+    <label>Maximum duration (in minutes)</label>
+    <input type="number" id="maxTime" value="10" min="2">
 
-    <button class="secondary" onclick="testSound()">🔊 Test sound</button>
     <button onclick="startGame()">Begin</button>
   </div>
 
@@ -152,116 +146,132 @@
     <h1>Revealed Time</h1>
     <div class="subtitle">Objective durations</div>
     <ul id="resultsList"></ul>
+    <button onclick="location.reload()">New Game</button>
   </div>
 
 </div>
 
-<audio id="alarm" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
-</audio>
-
 <script>
-  let currentRound = 0;
-  let totalRounds = 0;
-  let minSeconds = 0;
-  let maxSeconds = 0;
-  let durations = [];
-  let timer = null;
-  let audioUnlocked = false;
+let currentRound = 0;
+let totalRounds = 0;
+let minSeconds = 0;
+let maxSeconds = 0;
+let durations = [];
+let timer = null;
+let audioUnlocked = false;
 
-  const alarm = document.getElementById("alarm");
+// --- Unlock Audio (important for mobile browsers)
+function unlockAudio() {
+  if(audioUnlocked) return;
 
-  function unlockAudio() {
-    if (audioUnlocked) return;
+  const dummy = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+  dummy.volume = 0;
+  dummy.play().then(()=>dummy.pause()).catch(()=>{});
 
-    alarm.volume = 0;
-    alarm.play().then(() => {
-      alarm.pause();
-      alarm.currentTime = 0;
-      alarm.volume = 1;
-      audioUnlocked = true;
-    }).catch(() => {});
+  audioUnlocked = true;
+}
+
+// --- Play Sounds (new Audio object every time)
+function playStartSound() {
+  const sound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+  sound.play().catch(()=>{});
+}
+
+function playEndSound() {
+  const sound = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
+  sound.play().catch(()=>{});
+}
+
+// --- Start Game
+function startGame() {
+  unlockAudio();
+
+  totalRounds = Number(document.getElementById("rounds").value);
+  minSeconds = Number(document.getElementById("minTime").value) * 60;
+  maxSeconds = Number(document.getElementById("maxTime").value) * 60;
+
+  // Safety check
+  if(maxSeconds < minSeconds){
+    [minSeconds, maxSeconds] = [maxSeconds, minSeconds];
   }
 
-  function testSound() {
-    unlockAudio();
-    alarm.currentTime = 0;
-    alarm.play().catch(() => {});
+  currentRound = 0;
+  durations = [];
+
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+
+  updateStatus("Ready for the first round");
+  document.getElementById("roundBtn").innerText = "Start round";
+  document.getElementById("roundBtn").onclick = startRound;
+}
+
+// --- Start Round
+function startRound() {
+  if(currentRound >= totalRounds) return;
+
+  unlockAudio();
+
+  const duration = random(minSeconds, maxSeconds);
+  durations.push(duration);
+
+  playStartSound();
+
+  updateStatus("Round in progress");
+  document.getElementById("roundBtn").disabled = true;
+
+  timer = setTimeout(endRound, duration * 1000);
+}
+
+// --- End Round
+function endRound() {
+  clearTimeout(timer);
+
+  playEndSound();
+
+  currentRound++;
+  document.getElementById("roundBtn").disabled = false;
+
+  if(currentRound < totalRounds){
+    updateStatus(`Round ${currentRound} complete`);
+  } else {
+    updateStatus("All rounds complete");
+    const btn = document.getElementById("roundBtn");
+    btn.innerText = "Reveal time";
+    btn.onclick = showResults;
   }
+}
 
-  function startGame() {
-    unlockAudio();
+// --- Show Results
+function showResults() {
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("results").classList.remove("hidden");
 
-    totalRounds = Number(document.getElementById("rounds").value);
-    minSeconds = Number(document.getElementById("minTime").value) * 60;
-    maxSeconds = Number(document.getElementById("maxTime").value) * 60;
+  const list = document.getElementById("resultsList");
+  list.innerHTML = "";
 
-    document.getElementById("setup").classList.add("hidden");
-    document.getElementById("game").classList.remove("hidden");
+  durations.forEach((d,i)=>{
+    const li = document.createElement("li");
+    li.textContent = `Round ${i+1}: ${format(d)}`;
+    list.appendChild(li);
+  });
+}
 
-    updateStatus("Ready for the first round");
-  }
+// --- Utilities
+function updateStatus(text){
+  document.getElementById("status").textContent = text;
+}
 
-  function startRound() {
-    unlockAudio();
+function random(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
 
-    if (currentRound >= totalRounds) return;
-
-    const duration = random(minSeconds, maxSeconds);
-    durations.push(duration);
-
-    updateStatus("Round in progress");
-    document.getElementById("roundBtn").disabled = true;
-
-    timer = setTimeout(endRound, duration * 1000);
-  }
-
-  function endRound() {
-    clearTimeout(timer);
-
-    alarm.currentTime = 0;
-    alarm.play().catch(() => {});
-
-    currentRound++;
-    document.getElementById("roundBtn").disabled = false;
-
-    if (currentRound < totalRounds) {
-      updateStatus(`Round ${currentRound} complete`);
-    } else {
-      updateStatus("All rounds complete");
-      const btn = document.getElementById("roundBtn");
-      btn.innerText = "Reveal time";
-      btn.onclick = showResults;
-    }
-  }
-
-  function showResults() {
-    document.getElementById("game").classList.add("hidden");
-    document.getElementById("results").classList.remove("hidden");
-
-    const list = document.getElementById("resultsList");
-    list.innerHTML = "";
-
-    durations.forEach((d, i) => {
-      const li = document.createElement("li");
-      li.textContent = `Round ${i + 1}: ${format(d)}`;
-      list.appendChild(li);
-    });
-  }
-
-  function updateStatus(text) {
-    document.getElementById("status").textContent = text;
-  }
-
-  function random(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  function format(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m} min ${s} s`;
-  }
+function format(seconds){
+  const m = Math.floor(seconds/60);
+  const s = seconds%60;
+  return `${m} min ${s} s`;
+}
 </script>
+
 </body>
 </html>
